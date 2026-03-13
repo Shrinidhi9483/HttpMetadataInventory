@@ -53,8 +53,20 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 # Copy application code
 COPY --chown=appuser:appgroup ./src ./src
 
-# Copy SSL certificates
+# Copy SSL certificates (if present)
 COPY --chown=appuser:appgroup ./certs ./certs
+
+# Ensure certs directory exists and generate self-signed certs if not provided
+RUN mkdir -p certs && \
+    if [ ! -f certs/cert.pem ] || [ ! -f certs/key.pem ]; then \
+      apt-get update && apt-get install -y --no-install-recommends openssl && rm -rf /var/lib/apt/lists/* && \
+      openssl req -x509 -nodes -days 365 \
+        -newkey rsa:2048 \
+        -keyout certs/key.pem \
+        -out certs/cert.pem \
+        -subj "/C=US/ST=State/L=City/O=Org/OU=Unit/CN=localhost"; \
+    fi && \
+    chown -R appuser:appgroup certs
 
 # Switch to non-root user
 USER appuser

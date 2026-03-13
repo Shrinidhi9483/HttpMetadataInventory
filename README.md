@@ -328,6 +328,8 @@ docker-compose down -v
 docker-compose up --build
 ```
 
+> 💡 **Optional SSL certs:** If you want to use your own TLS certificate/key, place `certs/cert.pem` and `certs/key.pem` in the project `certs/` folder **before** running `docker-compose up`. If those files are not present, the container will generate a self-signed certificate automatically.
+
 ## 📊 Database Schema
 
 The MongoDB collection uses the following document structure:
