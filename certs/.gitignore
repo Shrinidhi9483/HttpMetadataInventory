@@ -1,0 +1,4 @@
+# Ignore SSL certificates in git (don't commit private keys!)
+*.pem
+*.key
+*.crt
